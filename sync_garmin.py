@@ -122,17 +122,21 @@ def main():
             date_str = day.get('id') 
             if not date_str: continue
             
+            # Hier nutzen wir jetzt safe_num, um None-Werte in 0 umzuwandeln
             sleep_score = day.get('sleepScore', "-")
-            sleep_secs = day.get('sleepSecs', 0)
+            sleep_secs = safe_num(day.get('sleepSecs'))
             sleep_duration = round(sleep_secs / 3600, 2) if sleep_secs > 0 else "-"
+            
             hrv_avg = day.get('hrv', "-")
             rhr = day.get('restingHR', "-")
-            
             bb_max = day.get('bodyBatteryHighest', "-")
             stress = day.get('stress', "-")
             steps = day.get('steps', 0)
             vo2_max = day.get('vo2max', "-")
-            acute_load = round(day.get('atl', 0)) if day.get('atl') else "-"
+            
+            # Auch hier absichern gegen leere Load-Werte
+            atl_val = safe_num(day.get('atl'))
+            acute_load = round(atl_val) if atl_val > 0 else "-"
 
             health_row = [date_str, sleep_score, sleep_duration, hrv_avg, rhr, bb_max, stress, steps, vo2_max, acute_load]
             
